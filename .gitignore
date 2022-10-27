@@ -1,6 +1,4 @@
 # APP
-src/config/ignoreFiles
-ormconfig.json
 /.env
 
 # compiled output
