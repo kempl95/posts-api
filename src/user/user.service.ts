@@ -11,7 +11,7 @@ import { User } from '../model/user.model';
 import { Repository } from 'typeorm';
 import { UserDTO } from './user.dto';
 import { Observable, from, mergeMap, throwIfEmpty, of, EMPTY } from 'rxjs';
-import { UserDataGenerator } from './user.data.generator';
+import { DataGenerator } from '../utils/data.generator';
 
 @Injectable()
 export class UserService {

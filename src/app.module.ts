@@ -6,14 +6,20 @@ import { configService } from './config/config.service';
 import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
 import { logger } from './middlewares/LoggerMiddleware';
+import { DataGenerator } from './utils/data.generator';
+import { PostModule } from './post/post.module';
+import { User } from './model/user.model';
+import { Post } from './model/post.model';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
-    UserModule,
+    TypeOrmModule.forFeature([
+        User, Post
+    ]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, DataGenerator],
 })
 export class AppModule implements NestModule {
   //Подключим middleware. Попробую использовать для авторизации пользователя

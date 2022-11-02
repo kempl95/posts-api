@@ -1,7 +1,7 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './utils/all-exceptions.filter';
-import { UserDataGenerator } from './user/user.data.generator';
+import { DataGenerator } from './utils/data.generator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

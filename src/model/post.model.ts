@@ -1,4 +1,5 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from './user.model';
 
 @Entity({ name: 'posts' })
 export class Post {
@@ -15,6 +16,10 @@ export class Post {
 
   @Column({ type: 'varchar', length: null, nullable: false })
   comment: string;
+
+  @ManyToOne(() => User, (user) => user.id)
+  @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  user: User
 
   constructor(partial: Partial<Post>) {
     Object.assign(this, partial);
