@@ -1,6 +1,7 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './utils/all-exceptions.filter';
+import { UserDataGenerator } from './user/user.data.generator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -9,6 +10,7 @@ async function bootstrap() {
   const { httpAdapter } = app.get(HttpAdapterHost);
   // Втроим обработчик исключений AllExceptionsFilter
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+  await app.init();
   await app.listen(8000);
 }
 bootstrap();

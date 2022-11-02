@@ -1,42 +1,42 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, UseFilters } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseFilters,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDTO } from './user.dto';
 import { Observable } from 'rxjs';
 
-
-
 @Controller('user')
 export class UserController {
-
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   @Get()
-  public async getAll(): Promise<UserDTO[]> {
-    return await this.userService.findAll()
+  public getAll(): Observable<Partial<UserDTO>> {
+    return this.userService.findAll();
   }
 
   @Get(':id')
-  async getUser(
+  getUserById(
     //ParseIntPipe - Конвейеры / Pipes - трансформация/валидация входных данных
-    @Param('id', new ParseIntPipe({
-      errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE
-    })) id: number,
-  ): Promise<UserDTO> {
-    return await this.userService.findById(id);
-  }
-
-  @Get('/observable/:id')
-  getUserObservable(
-    //ParseIntPipe - Конвейеры / Pipes - трансформация/валидация входных данных
-    @Param('id', new ParseIntPipe({
-      errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE
-    })) id: number,
-  ): Observable<Partial<UserDTO>> {
-    return this.userService.findById2(id);
+    @Param(
+      'id',
+      new ParseIntPipe({
+        errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE,
+      }),
+    )
+    id: number,
+  ): Observable<UserDTO> {
+    return this.userService.findById(id);
   }
 
   @Post()
-  public async post(@Body() dto: UserDTO): Promise<UserDTO> {
+  public post(@Body() dto: UserDTO): Observable<UserDTO> {
     return this.userService.create(dto);
   }
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUUID, } from 'class-validator';
+import { IsString } from 'class-validator';
 import { User } from '../model/user.model';
 
 export class UserDTO implements Readonly<UserDTO> {
@@ -14,27 +14,29 @@ export class UserDTO implements Readonly<UserDTO> {
   @IsString()
   login: string;
 
-  public static from(dto: Partial<UserDTO>) {
-    const it = new UserDTO();
-    it.id = dto.id;
-    it.name = dto.name;
-    it.login = dto.login;
-    return it;
-  }
+  @ApiProperty({ required: true })
+  @IsString()
+  password: string;
 
   public static fromEntity(entity: User) {
-    return this.from({
+    return new UserDTO({
       id: entity.id,
       name: entity.name,
-      login: entity.login
+      login: entity.login,
+      password: entity.password,
     });
   }
 
   public toEntity(dto: UserDTO) {
-    const it = new User();
-    it.id = dto.id;
-    it.name = dto.name;
-    it.login = dto.login;
-    return it;
+    return new User({
+      id: dto.id,
+      name: dto.name,
+      login: dto.login,
+      password: dto.password,
+    });
+  }
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
   }
 }
