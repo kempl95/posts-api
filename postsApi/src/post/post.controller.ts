@@ -13,7 +13,7 @@ import { PostDTO } from './post.dto';
 import { Observable } from 'rxjs';
 import { UserDTO } from '../user/user.dto';
 
-@Controller('user')
+@Controller('posts')
 export class PostController {
   constructor(private postService: PostService) {}
 

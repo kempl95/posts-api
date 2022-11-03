@@ -12,7 +12,7 @@ import { UserService } from './user.service';
 import { UserDTO } from './user.dto';
 import { Observable } from 'rxjs';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 

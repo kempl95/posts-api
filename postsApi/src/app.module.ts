@@ -17,6 +17,8 @@ import { Post } from './model/post.model';
     TypeOrmModule.forFeature([
         User, Post
     ]),
+    UserModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService, DataGenerator],
