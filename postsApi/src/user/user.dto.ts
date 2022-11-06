@@ -18,6 +18,10 @@ export class UserDTO implements Readonly<UserDTO> {
   @IsString()
   password: string;
 
+  @ApiProperty({ required: true })
+  @IsString()
+  email: string;
+
   public static fromEntity(entity: User) {
     return new UserDTO({
       id: entity.id,

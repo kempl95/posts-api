@@ -39,6 +39,7 @@ export class DataGenerator implements OnApplicationBootstrap {
           name: `${firstName} ${lastName}`,
           login: `${firstName}_${lastName}`,
           password: password,
+          email: faker.internet.email()
         }),
       );
     }
@@ -52,6 +53,7 @@ export class DataGenerator implements OnApplicationBootstrap {
        name: 'Admin',
        login: 'admin',
        password: password,
+       email: 'admin@gmail.com'
      });
     await this.userRepository.save(user);
   }

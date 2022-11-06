@@ -1,16 +1,8 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  ParseIntPipe,
-  Post,
-  UseFilters,
-} from '@nestjs/common';
+
 import { UserService } from './user.service';
 import { UserDTO } from './user.dto';
 import { Observable } from 'rxjs';
+import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post } from '@nestjs/common';
 
 @Controller('users')
 export class UserController {
