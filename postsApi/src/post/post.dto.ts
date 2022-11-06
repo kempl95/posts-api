@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUUID } from 'class-validator';
-import { User } from '../model/user.model';
-import { Post } from '../model/post.model';
+import { User } from '../models/user.model';
+import { Post } from '../models/post.model';
 
 export class PostDTO implements Readonly<PostDTO> {
   @ApiProperty({ required: false })

@@ -1,11 +1,11 @@
 import { Repository } from 'typeorm';
-import { User } from '../model/user.model';
+import { User } from '../models/user.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { constants } from './Constants';
 import { faker } from '@faker-js/faker';
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { Post } from '../model/post.model';
+import { Post } from '../models/post.model';
 
 @Injectable()
 export class DataGenerator implements OnApplicationBootstrap {

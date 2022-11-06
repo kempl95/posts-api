@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PostDTO } from './post.dto';
 import { Observable, from, mergeMap, throwIfEmpty, of, EMPTY } from 'rxjs';
-import { Post } from '../model/post.model';
+import { Post } from '../models/post.model';
 
 @Injectable()
 export class PostService {

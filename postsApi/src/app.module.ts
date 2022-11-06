@@ -8,8 +8,8 @@ import { UserModule } from './user/user.module';
 import { logger } from './middlewares/LoggerMiddleware';
 import { DataGenerator } from './utils/data.generator';
 import { PostModule } from './post/post.module';
-import { User } from './model/user.model';
-import { Post } from './model/post.model';
+import { User } from './models/user.model';
+import { Post } from './models/post.model';
 
 @Module({
   imports: [

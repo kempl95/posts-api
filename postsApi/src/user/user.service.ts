@@ -7,7 +7,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../model/user.model';
+import { User } from '../models/user.model';
 import { Repository } from 'typeorm';
 import { UserDTO } from './user.dto';
 import { Observable, from, mergeMap, throwIfEmpty, of, EMPTY } from 'rxjs';
