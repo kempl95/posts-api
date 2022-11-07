@@ -19,6 +19,7 @@ export class PostService {
   ) {}
 
   public findAll(): Observable<PostDTO[]> {
+    //Check given token
     const resQuery = this.postRepository.find();
     return from(resQuery).pipe(
       map((objs) => { return PostDTO.fromList(objs) })
@@ -46,6 +47,19 @@ export class PostService {
       throwIfEmpty(
         () =>
           new NotFoundException(`Post with title ${title} has not been found`),
+      ),
+    );
+  }
+
+  public findByUserLogin(login: string): Observable<PostDTO> {
+    const resQuery = this.postRepository.findOne({
+      where: { title: 'title' },
+    });
+    return from(resQuery).pipe(
+      mergeMap((obj) => (obj ? of(PostDTO.fromEntity(obj)) : EMPTY)),
+      throwIfEmpty(
+        () =>
+          new NotFoundException(`Post with title ${'title'} has not been found`),
       ),
     );
   }

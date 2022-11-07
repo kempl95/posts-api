@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './utils/all-exceptions.filter';
 import { DataGenerator } from './utils/data.generator';
 
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

@@ -13,6 +13,8 @@ export class JwtService {
   ) {}
 
   public findByLogin(login: string): Observable<UserDTO> {
+    //ToDO: check token for jwt-token-api
+
     const resQuery = this.userRepository.findOne({
       where: { login: login },
     });

@@ -6,11 +6,12 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  UseFilters,
+  UseFilters, UseGuards,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { PostDTO } from './post.dto';
 import { Observable } from 'rxjs';
+import { AuthGuard } from '../utils/auth.guard';
 
 @Controller('posts')
 export class PostController {
@@ -41,6 +42,15 @@ export class PostController {
     @Param('title') title: string,
   ): Observable<PostDTO> {
     return this.postService.findByTitle(title);
+  }
+
+  @Get('/user/:login')
+  @UseGuards(AuthGuard)
+  findByUser(
+    //ParseIntPipe - Конвейеры / Pipes - трансформация/валидация входных данных
+    @Param('login') login: string,
+  ): Observable<PostDTO> {
+    return this.postService.findByUserLogin(login);
   }
 
   @Post()
