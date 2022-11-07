@@ -3,13 +3,14 @@ import { UserService } from './user.service';
 import { UserDTO } from './user.dto';
 import { Observable } from 'rxjs';
 import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { ValidationPipe } from '../utils/validation.pipe';
 
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Get()
-  public getAll(): Observable<Partial<UserDTO>> {
+  public getAll(): Observable<UserDTO[]> {
     return this.userService.findAll();
   }
 
@@ -27,8 +28,17 @@ export class UserController {
     return this.userService.findById(id);
   }
 
+  @Get('/login/:login')
+  getUserByLogin(
+    //ParseIntPipe - Конвейеры / Pipes - трансформация/валидация входных данных
+    @Param('login')
+      login: string,
+  ): Observable<UserDTO> {
+    return this.userService.findByLogin(login);
+  }
+
   @Post()
-  public post(@Body() dto: UserDTO): Observable<UserDTO> {
+  public post(@Body(new ValidationPipe()) dto: UserDTO): Observable<UserDTO> {
     return this.userService.create(dto);
   }
 }

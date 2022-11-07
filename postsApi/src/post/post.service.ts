@@ -9,6 +9,8 @@ import { Repository } from 'typeorm';
 import { PostDTO } from './post.dto';
 import { Observable, from, mergeMap, throwIfEmpty, of, EMPTY } from 'rxjs';
 import { Post } from '../models/post.model';
+import { map } from 'rxjs/operators';
+import { UserDTO } from '../user/user.dto';
 
 @Injectable()
 export class PostService {
@@ -16,10 +18,10 @@ export class PostService {
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
   ) {}
 
-  public findAll(): Observable<Partial<PostDTO>> {
+  public findAll(): Observable<PostDTO[]> {
     const resQuery = this.postRepository.find();
     return from(resQuery).pipe(
-      mergeMap((objs) => objs.map((obj) => PostDTO.fromEntity(obj))),
+      map((objs) => { return PostDTO.fromList(objs) })
     );
   }
 

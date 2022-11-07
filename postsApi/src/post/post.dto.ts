@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUUID } from 'class-validator';
-import { User } from '../models/user.model';
 import { Post } from '../models/post.model';
+import { User } from '../models/user.model';
 
 export class PostDTO implements Readonly<PostDTO> {
   @ApiProperty({ required: false })
@@ -22,7 +22,13 @@ export class PostDTO implements Readonly<PostDTO> {
       comment: entity.comment,
     });
   }
-
+  public static fromList(userList: Post[]) {
+    let list = [];
+    for (const user of userList) {
+      list.push(PostDTO.fromEntity(user));
+    }
+    return list;
+  }
   public toEntity(dto: PostDTO) {
     return new Post({
       id: dto.id,

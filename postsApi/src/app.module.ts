@@ -10,6 +10,8 @@ import { DataGenerator } from './utils/data.generator';
 import { PostModule } from './post/post.module';
 import { User } from './models/user.model';
 import { Post } from './models/post.model';
+import { UserService } from './user/user.service';
+import { JwtModule } from './jwt/jwt.module';
 
 @Module({
   imports: [
@@ -17,8 +19,7 @@ import { Post } from './models/post.model';
     TypeOrmModule.forFeature([
         User, Post
     ]),
-    UserModule,
-    PostModule,
+    UserModule, PostModule, JwtModule
   ],
   controllers: [AppController],
   providers: [AppService, DataGenerator],

@@ -1,17 +1,10 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  NotFoundException,
-  OnModuleInit,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../models/user.model';
 import { Repository } from 'typeorm';
 import { UserDTO } from './user.dto';
-import { Observable, from, mergeMap, throwIfEmpty, of, EMPTY } from 'rxjs';
-import { DataGenerator } from '../utils/data.generator';
+import { EMPTY, from, mergeMap, Observable, of, throwIfEmpty } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class UserService {
@@ -19,10 +12,10 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  public findAll(): Observable<Partial<UserDTO>> {
+  public findAll(): Observable<UserDTO[]> {
     const resQuery = this.userRepository.find();
     return from(resQuery).pipe(
-      mergeMap((objs) => objs.map((obj) => UserDTO.fromEntity(obj))),
+      map((objs) => { return UserDTO.fromList(objs, false) })
     );
   }
 
@@ -31,9 +24,21 @@ export class UserService {
       where: { id: id },
     });
     return from(resQuery).pipe(
-      mergeMap((obj) => (obj ? of(UserDTO.fromEntity(obj)) : EMPTY)),
+      mergeMap((obj) => (obj ? of(UserDTO.fromEntityWithoutPassword(obj)) : EMPTY)),
       throwIfEmpty(
         () => new NotFoundException(`User ${id} has not been found`),
+      ),
+    );
+  }
+
+  public findByLogin(login: string): Observable<UserDTO> {
+    const resQuery = this.userRepository.findOne({
+      where: { login: login },
+    });
+    return from(resQuery).pipe(
+      mergeMap((obj) => (obj ? of(UserDTO.fromEntityWithoutPassword(obj)) : EMPTY)),
+      throwIfEmpty(
+        () => new NotFoundException(`User ${login} has not been found`),
       ),
     );
   }
@@ -42,7 +47,7 @@ export class UserService {
     const resQuery = this.userRepository.save(dto.toEntity(dto));
 
     return from(resQuery).pipe(
-      mergeMap((obj) => (obj ? of(UserDTO.fromEntity(obj)) : EMPTY)),
+      mergeMap((obj) => (obj ? of(UserDTO.fromEntityWithoutPassword(obj)) : EMPTY)),
       throwIfEmpty(
         () =>
           new HttpException(`User has not been saved`, HttpStatus.BAD_REQUEST),
