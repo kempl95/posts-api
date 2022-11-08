@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { configService } from './config/config.service';
 import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
-import { logger } from './middlewares/LoggerMiddleware';
+import { loggerMiddleware } from './middlewares/LoggerMiddleware';
 import { DataGenerator } from './utils/data.generator';
 import { PostModule } from './post/post.module';
 import { User } from './models/user.model';
@@ -25,8 +25,7 @@ import { JwtModule } from './jwt/jwt.module';
   providers: [AppService, DataGenerator],
 })
 export class AppModule implements NestModule {
-  //Подключим middleware. Попробую использовать для авторизации пользователя
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(logger).forRoutes(UserController);
+    consumer.apply(loggerMiddleware).forRoutes(UserController);
   }
 }

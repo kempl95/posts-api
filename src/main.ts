@@ -2,6 +2,7 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './utils/all-exceptions.filter';
 import { DataGenerator } from './utils/data.generator';
+import { Logger } from '@nestjs/common';
 
 
 async function bootstrap() {

@@ -38,7 +38,7 @@ export class UserController {
   }
 
   @Post()
-  public post(@Body(new ValidationPipe()) dto: UserDTO): Observable<UserDTO> {
+  public post(@Body(new ValidationPipe()) dto: UserDTO): Promise<Observable<UserDTO>> {
     return this.userService.create(dto);
   }
 }

@@ -48,9 +48,8 @@ export class UserDTO implements Readonly<UserDTO> {
     return list;
   }
 
-  public toEntity(dto: UserDTO) {
+  public static toEntity(dto: UserDTO) {
     return new User({
-      id: dto.id,
       name: dto.name,
       login: dto.login,
       password: dto.password,
