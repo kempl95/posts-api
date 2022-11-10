@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUUID } from 'class-validator';
 import { Post } from '../models/post.model';
 
-export class PostDTO implements Readonly<PostDTO> {
+export class PostDTO {
   @ApiProperty({ required: false })
   id: number;
 
@@ -13,6 +13,10 @@ export class PostDTO implements Readonly<PostDTO> {
   @ApiProperty({ required: true })
   @IsString()
   comment: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  userLogin: string;
 
   public static fromEntity(entity: Post) {
     return new PostDTO({
@@ -28,11 +32,11 @@ export class PostDTO implements Readonly<PostDTO> {
     }
     return list;
   }
-  public toEntity(dto: PostDTO) {
+  public toEntity(dto: PostDTO, userLogin: string) {
     return new Post({
-      id: dto.id,
       title: dto.title,
       comment: dto.comment,
+      userLogin: userLogin
     });
   }
 

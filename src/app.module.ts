@@ -3,29 +3,24 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configService } from './config/config.service';
-import { UserController } from './user/user.controller';
-import { UserModule } from './user/user.module';
 import { loggerMiddleware } from './middlewares/LoggerMiddleware';
 import { DataGenerator } from './utils/data.generator';
 import { PostModule } from './post/post.module';
-import { User } from './models/user.model';
 import { Post } from './models/post.model';
-import { UserService } from './user/user.service';
-import { JwtModule } from './jwt/jwt.module';
+import { PostController } from './post/post.controller';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
-    TypeOrmModule.forFeature([
-        User, Post
-    ]),
-    UserModule, PostModule, JwtModule
+    TypeOrmModule.forFeature([Post]),
+    PostModule, HttpModule
   ],
   controllers: [AppController],
   providers: [AppService, DataGenerator],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(loggerMiddleware).forRoutes(UserController);
+    consumer.apply(loggerMiddleware).forRoutes(PostController);
   }
 }

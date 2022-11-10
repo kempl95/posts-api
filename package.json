@@ -1,6 +1,6 @@
 {
   "name": "nestjs-api",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "",
   "author": "mirzhalalov.kg",
   "private": true,
@@ -22,10 +22,11 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "typeorm:migration:generate": "npm run typeorm -- migration:generate -d src/config/config.service.ts ",
     "typeorm:migration:run": "npm run typeorm -- migration:run -d src/config/config.service.ts ",
-    "migrations:run": "npm run typeorm:migration:generate -- src/migration/my_init && npm run typeorm:migration:run"
+    "migrations:run": "nest build && npm run typeorm:migration:generate -- src/migration/my_init && npm run typeorm:migration:run"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@nestjs/axios": "^1.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",

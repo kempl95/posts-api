@@ -8,10 +8,12 @@ import {
   Post,
   UseFilters, UseGuards,
 } from '@nestjs/common';
+import { IncomingMessage } from 'http';
 import { PostService } from './post.service';
 import { PostDTO } from './post.dto';
 import { Observable } from 'rxjs';
 import { AuthGuard } from '../utils/auth.guard';
+import { ValidationPipe } from '../utils/validation.pipe';
 
 @Controller('posts')
 export class PostController {
@@ -54,7 +56,8 @@ export class PostController {
   }
 
   @Post()
-  public post(@Body() dto: PostDTO): Observable<PostDTO> {
-    return this.postService.create(dto);
+  @UseGuards(AuthGuard)
+  public post(@Body(new ValidationPipe()) dto: PostDTO, request: IncomingMessage): Observable<PostDTO> {
+    return this.postService.create(dto, request);
   }
 }

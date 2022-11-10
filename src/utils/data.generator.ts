@@ -1,76 +1,42 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
 import { constants } from './Constants';
 import { faker } from '@faker-js/faker';
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { Post } from '../models/post.model';
-import { User } from '../models/user.model';
+import { UserDTO } from '../user/user.dto';
+import { firstValueFrom } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class DataGenerator implements OnApplicationBootstrap {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
-    @InjectRepository(Post) private readonly postRepository: Repository<Post>
+    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
+    private readonly httpService: HttpService
   ) {}
   async onApplicationBootstrap(): Promise<void> {
     await this.generate();
   }
 
   public async generate(): Promise<void> {
-    const userQueryLength = await this.userRepository.count();
     const postQueryLength = await this.postRepository.count();
-    if (userQueryLength === 0) {
-      await this.generateStaticUsers();
-      await this.generateUsers();
-    }
     if (postQueryLength === 0) await this.generatePosts();
-  }
-
-  public async generateUsers(): Promise<void> {
-    const users = [];
-    for (let i = 0; i < constants.generator.userQTY; i++) {
-
-      const firstName = faker.name.firstName('male');
-      const lastName = faker.name.lastName('male');
-      const password = await bcrypt.hash(`${firstName} ${lastName}`, 10);
-      users.push(
-        new User({
-          name: `${firstName} ${lastName}`,
-          login: `${firstName}_${lastName}`,
-          password: password,
-          email: faker.internet.email()
-        }),
-      );
-    }
-    await this.userRepository.save(users);
-  }
-
-  public async generateStaticUsers(): Promise<void> {
-    const password = await bcrypt.hash(`admin`, 10);
-
-     const user = new User( {
-       name: 'Admin',
-       login: 'admin',
-       password: password,
-       email: 'admin@gmail.com'
-     });
-    await this.userRepository.save(user);
   }
 
   public async generatePosts(): Promise<void> {
     const saveArray = [];
-    const userQuery = await this.userRepository.find();
+    const { data } = await firstValueFrom(
+      this.httpService.get<UserDTO[]>(`${process.env.AUTH_APP_URL}:${process.env.AUTH_APP_PORT}/users`).pipe(),
+    );
 
     for (let i = 0; i < constants.generator.postQTY; i++) {
-      const rndInt = this.getRandomInt(0, userQuery.length);
+      const rndInt = this.getRandomInt(0, data.length);
       const paragraphLength = this.getRandomInt(2, 5);
-      const user = userQuery[rndInt];
       saveArray.push(
         new Post({
           title: faker.random.word(),
           comment: faker.lorem.paragraph(paragraphLength),
-          user: user
+          userLogin: data[rndInt].login
         }),
       );
     }

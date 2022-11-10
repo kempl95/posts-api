@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostService } from './post.service';
 import { PostController } from './post.controller';
 import { Post } from '../models/post.model';
-import { User } from '../models/user.model';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, User])],
+  imports: [TypeOrmModule.forFeature([Post]), HttpModule],
   providers: [PostService],
   controllers: [PostController],
   exports: [],

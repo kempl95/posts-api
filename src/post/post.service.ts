@@ -10,7 +10,8 @@ import { PostDTO } from './post.dto';
 import { Observable, from, mergeMap, throwIfEmpty, of, EMPTY } from 'rxjs';
 import { Post } from '../models/post.model';
 import { map } from 'rxjs/operators';
-import { UserDTO } from '../user/user.dto';
+import { IncomingMessage } from "http";
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class PostService {
@@ -64,8 +65,12 @@ export class PostService {
     );
   }
 
-  public create(dto: PostDTO): Observable<PostDTO> {
-    const resQuery = this.postRepository.save(dto.toEntity(dto));
+  public create(dto: PostDTO, request:IncomingMessage): Observable<PostDTO> {
+    const accessToken = request.headers['access-token'];
+    let decoded = jwt.decode(accessToken, {complete: true}) ;
+    const { login } = decoded.payload;
+
+    const resQuery = this.postRepository.save(dto.toEntity(dto, login));
 
     return from(resQuery).pipe(
       mergeMap((obj) => (obj ? of(PostDTO.fromEntity(obj)) : EMPTY)),
