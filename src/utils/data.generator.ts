@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { constants } from './Constants';
+import { constants } from './constants';
 import { faker } from '@faker-js/faker';
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { Post } from '../models/post.model';

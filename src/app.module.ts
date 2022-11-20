@@ -9,12 +9,13 @@ import { PostModule } from './post/post.module';
 import { Post } from './models/post.model';
 import { PostController } from './post/post.controller';
 import { HttpModule } from '@nestjs/axios';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     TypeOrmModule.forFeature([Post]),
-    PostModule, HttpModule
+    PostModule, DatabaseModule, HttpModule
   ],
   controllers: [AppController],
   providers: [AppService, DataGenerator],

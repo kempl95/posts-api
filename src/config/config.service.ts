@@ -1,6 +1,4 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import * as path from 'path';
 
 require('dotenv').config();
 
@@ -22,7 +20,7 @@ class ConfigService {
   }
 
   public getPort() {
-    return this.getValue('PORT', true);
+    return this.getValue('DATABASE_PORT', true);
   }
 
   public isProduction() {
@@ -31,14 +29,15 @@ class ConfigService {
   }
 
   public getTypeOrmConfig(): DataSourceOptions {
+    const DATABASE_TYPE: any = String(process.env.DATABASE_TYPE) || 'postgres';
     return {
-      type: 'postgres',
+      type: DATABASE_TYPE,
 
-      host: this.getValue('POSTGRES_HOST'),
-      port: parseInt(this.getValue('POSTGRES_PORT')),
-      username: this.getValue('POSTGRES_USER'),
-      password: this.getValue('POSTGRES_PASSWORD'),
-      database: this.getValue('POSTGRES_DATABASE'),
+      host: this.getValue('DATABASE_HOST'),
+      port: parseInt(this.getPort()),
+      username: this.getValue('DATABASE_USER'),
+      password: this.getValue('DATABASE_PASSWORD'),
+      database: this.getValue('DATABASE_NAME'),
 
       entities: ['**/*.model{.ts,.js}'],
 
@@ -46,17 +45,20 @@ class ConfigService {
 
       migrations: ['./src/migration/*.ts'],
 
+      logging: true,
+
       ssl: this.isProduction(),
     };
   }
 }
 
 const configService = new ConfigService(process.env).ensureValues([
-  'POSTGRES_HOST',
-  'POSTGRES_PORT',
-  'POSTGRES_USER',
-  'POSTGRES_PASSWORD',
-  'POSTGRES_DATABASE',
+  'DATABASE_TYPE',
+  'DATABASE_HOST',
+  'DATABASE_PORT',
+  'DATABASE_USER',
+  'DATABASE_PASSWORD',
+  'DATABASE_NAME'
 ]);
 
 const connectionSource = new DataSource(configService.getTypeOrmConfig());

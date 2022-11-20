@@ -24,6 +24,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let httpStatus = 400;
     let message = 'Server error';
 
+    //Самому не нравится else if-ы, но времени нет структурировать нормально
     if (exception instanceof HttpException) {
       httpStatus = exception.getStatus();
       message = exception.getResponse().toString();
@@ -33,7 +34,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
       httpStatus = exception.status;
       message = exception.message;
     }
-    else if (exception instanceof Error) Logger.error(`Server error: ${exception.message}`);
+    else if (exception instanceof Error) {
+      if (exception['code']) { //Error class does not have 'code' field
+        if (exception['code'] === 'ECONNREFUSED') {
+          Logger.error(`Database connection failed: ${exception.message}`);
+        }
+      }
+      else Logger.error(`Server error: ${exception.message}`);
+    }
 
     const responseBody = {
       statusCode: httpStatus,

@@ -5,15 +5,15 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
-  Post,
+  Post, Req,
   UseFilters, UseGuards,
 } from '@nestjs/common';
-import { IncomingMessage } from 'http';
 import { PostService } from './post.service';
 import { PostDTO } from './post.dto';
 import { Observable } from 'rxjs';
 import { AuthGuard } from '../utils/auth.guard';
 import { ValidationPipe } from '../utils/validation.pipe';
+import { Request } from 'express';
 
 @Controller('posts')
 export class PostController {
@@ -22,6 +22,12 @@ export class PostController {
   @Get()
   public getAll(): Observable<PostDTO[]> {
     return this.postService.findAll();
+  }
+
+  @Get('/user')
+  @UseGuards(AuthGuard)
+  findByUser(@Req() request: Request): Observable<PostDTO[]> {
+    return this.postService.findByUserLogin(request);
   }
 
   @Get(':id')
@@ -46,18 +52,9 @@ export class PostController {
     return this.postService.findByTitle(title);
   }
 
-  @Get('/user/:login')
-  @UseGuards(AuthGuard)
-  findByUser(
-    //ParseIntPipe - Конвейеры / Pipes - трансформация/валидация входных данных
-    @Param('login') login: string,
-  ): Observable<PostDTO> {
-    return this.postService.findByUserLogin(login);
-  }
-
   @Post()
   @UseGuards(AuthGuard)
-  public post(@Body(new ValidationPipe()) dto: PostDTO, request: IncomingMessage): Observable<PostDTO> {
+  public post(@Body(new ValidationPipe()) dto: PostDTO, @Req() request: Request): Observable<PostDTO> {
     return this.postService.create(dto, request);
   }
 }

@@ -1,10 +1,10 @@
-import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { IncomingMessage } from 'http';
+import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable, Req } from '@nestjs/common';
 import { firstValueFrom, from } from 'rxjs';
 import * as jwt from 'jsonwebtoken';
 import { UserDTO } from '../user/user.dto';
 import { HttpService } from '@nestjs/axios';
 import { ValidationException } from './validation.exception';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     return await this.validateRequest(request);
   }
 
-  async validateRequest(request: IncomingMessage): Promise<boolean> {
+  async validateRequest(@Req() request: Request): Promise<boolean> {
     const accessToken = request.headers['access-token'];
     if (!accessToken) throw new HttpException(`'access-token' key with value 'token_from_authentication_server' must be in headers`, HttpStatus.UNAUTHORIZED);
 

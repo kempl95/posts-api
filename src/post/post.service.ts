@@ -10,8 +10,8 @@ import { PostDTO } from './post.dto';
 import { Observable, from, mergeMap, throwIfEmpty, of, EMPTY } from 'rxjs';
 import { Post } from '../models/post.model';
 import { map } from 'rxjs/operators';
-import { IncomingMessage } from "http";
 import * as jwt from 'jsonwebtoken';
+import { Request } from 'express';
 
 @Injectable()
 export class PostService {
@@ -52,20 +52,20 @@ export class PostService {
     );
   }
 
-  public findByUserLogin(login: string): Observable<PostDTO> {
-    const resQuery = this.postRepository.findOne({
-      where: { title: 'title' },
+  public findByUserLogin(request: Request): Observable<PostDTO[]> {
+    const accessToken = request.headers['access-token'];
+    let decoded = jwt.decode(accessToken, {complete: true}) ;
+    const { login } = decoded.payload;
+
+    const resQuery = this.postRepository.find({
+      where: { userLogin: login },
     });
     return from(resQuery).pipe(
-      mergeMap((obj) => (obj ? of(PostDTO.fromEntity(obj)) : EMPTY)),
-      throwIfEmpty(
-        () =>
-          new NotFoundException(`Post with title ${'title'} has not been found`),
-      ),
+      map((objs) => { return PostDTO.fromList(objs) })
     );
   }
 
-  public create(dto: PostDTO, request:IncomingMessage): Observable<PostDTO> {
+  public create(dto: PostDTO, request: Request): Observable<PostDTO> {
     const accessToken = request.headers['access-token'];
     let decoded = jwt.decode(accessToken, {complete: true}) ;
     const { login } = decoded.payload;
