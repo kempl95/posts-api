@@ -3,7 +3,6 @@ import { IsString, IsUUID } from 'class-validator';
 import { Post } from '../models/post.model';
 
 export class PostDTO {
-  @ApiProperty({ required: false })
   id: number;
 
   @ApiProperty({ required: true })
@@ -14,7 +13,6 @@ export class PostDTO {
   @IsString()
   comment: string;
 
-  @ApiProperty({ required: true })
   @IsString()
   userLogin: string;
 
