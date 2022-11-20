@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  db:
+    image: mysql
+    ports:
+      - 3306:3306
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: postsapi
+      MYSQL_USER: user
+      MYSQL_PASSWORD: qwe123##
+    volumes:
+      - /c/Work/Distr/dockerData/mysql:/var/lib/mysql

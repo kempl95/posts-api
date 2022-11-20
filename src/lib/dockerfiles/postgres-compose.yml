@@ -1,0 +1,15 @@
+version: "3.1"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: qwe123##
+      POSTGRES_USER: root
+      POSTGRES_DB: postgres
+    volumes:
+      - /c/Work/Distr/dockerData/postgres:/var/lib/postgresql
